@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BG from "../src/img/bg.png";
+import { FaClock, FaPlay, FaPause, FaRedo } from 'react-icons/fa';
 
 function App() {
   const [time, setTime] = useState(() => {
@@ -35,10 +35,10 @@ function App() {
     const milliseconds = (`0${(time % 1000) / 10}`).slice(-2);
     const seconds = (`0${Math.floor((time / 1000) % 60)}`).slice(-2);
     const minutes = (`0${Math.floor((time / 60000) % 60)}`).slice(-2);
-    const hours = (`0${Math.floor((time / 3600000) % 24)}`).slice(-2);
+    const hours = Math.floor((time / 3600000) % 24);
     const days = Math.floor(time / 86400000);
 
-    return `${days}d ${hours}h ${minutes}m ${seconds}s.${milliseconds}`;
+    return `${days > 0 ? `${days}:` : ''}${hours > 0 ? `${hours}:` : ''}${minutes}:${seconds}.${milliseconds}`;
   };
 
   const handleStart = () => setIsRunning(true);
@@ -55,34 +55,54 @@ function App() {
   return (
     <div
       className="flex flex-col items-center justify-center h-screen text-white"
-      style={{ backgroundImage: `url(${BG})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      style={{ backgroundColor: 'black' }}
     >
-      <div className="text-5xl font-extrabold shadow-lg p-4 rounded bg-black bg-opacity-50">
-        {formatTime(time)}
+      {/* Top Section: Clock Icon and Stopwatch Text */}
+      <div className="flex flex-col items-center mb-4">
+        <FaClock className="text-7xl text-gray-300" />
+        <div className="text-3xl font-bold text-gray-300">Stopwatch</div>
       </div>
-      <div className="flex flex-col space-y-4 mt-8">
-        {!isRunning ? (
+
+      {/* Bottom Section: Timer and Buttons */}
+      <div className="flex flex-col items-center">
+        {/* Timer */}
+        <div className="text-6xl font-extrabold shadow-lg p-4 rounded bg-gray-800 bg-opacity-75 mb-8">
+          {formatTime(time)}
+        </div>
+
+        {/* Buttons: Start/Pause/Reset */}
+        <div className="flex space-x-4 mb-8">
+          {!isRunning ? (
+            <button
+              className="p-4 bg-green-500 text-white text-xl font-semibold rounded-full shadow-lg hover:bg-green-600"
+              onClick={handleStart}
+            >
+              <FaPlay />
+            </button>
+          ) : (
+            <button
+              className="p-4 bg-yellow-500 text-white text-xl font-semibold rounded-full shadow-lg hover:bg-yellow-600"
+              onClick={handlePause}
+            >
+              <FaPause />
+            </button>
+          )}
           <button
-            className="px-6 py-3 bg-green-500 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-green-600"
-            onClick={handleStart}
+            className="p-4 bg-red-500 text-white text-xl font-semibold rounded-full shadow-lg hover:bg-red-600"
+            onClick={handleReset}
           >
-            Start
+            <FaRedo />
           </button>
-        ) : (
-          <button
-            className="px-6 py-3 bg-yellow-500 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-yellow-600"
-            onClick={handlePause}
-          >
-            Pause
-          </button>
-        )}
-        <button
-          className="px-6 py-3 bg-red-500 text-white text-lg font-semibold rounded-full shadow-lg hover:bg-red-600"
-          onClick={handleReset}
-        >
-          Reset
-        </button>
+        </div>
       </div>
+
+      {/* Footer: Developed by Emma with Sixtyfour Convergence font */}
+      <footer
+        className="absolute bottom-14 text-gray-400"
+        style={{ fontFamily: 'Sixtyfour Convergence, sans-serif' }}
+      >
+        Developed by Emma
+      </footer>
     </div>
   );
 }
